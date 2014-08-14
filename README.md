@@ -52,7 +52,18 @@ var person = Person.Retrieve(653987);
 ##### Querying the database for matching records...
 
 ```csharp
-// tba
+var people = Database.Where(new SearchByNameQuery() 
+   { 
+      FirstName == "Robert", 
+      FamilyName == "Webb"
+   });
+   
+var people = Database.First(new SearchByNameQuery() 
+   { 
+      FamilyName == "Webb"
+   });
+   
+var havePeopleCalledRobert = Database.Any(new SearchByNameQuery() { FirstName == "Robert" });
 ```
 
 ##### Creating a Table...
