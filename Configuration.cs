@@ -10,7 +10,13 @@ namespace Level
     
     public static string ProviderName { get; set; }
     
-    public static DbProviderFactory Provider { get; set; }
+    public static IDbProviderFactory Provider { get; set; }
+    
+    
+    public static IDbConnection Connect() 
+    {
+      
+    }
     
   }
   
