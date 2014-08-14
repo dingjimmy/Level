@@ -19,19 +19,18 @@ var person = new Person()
 person.Save();
 ```
 
+##### 2: Updating a record...
 
-##### 2: Retrieving an existing record..
+```csharp
+person.FamilyName = "Dreamcoat";
+person.Save()
+```
+
+##### 3: Retrieving an existing record..
 
 ```csharp
 var person = ActiveRecord.RetrieveFirst<Person>( p => p.Firstname == "Joeseph" && 
                                                  p.FamilyName = "Bloggs");
-```
-
-##### 3: Updating a record...
-
-```csharp
-person.FamilyName = "Dreamcoat";
-person.Update()
 ```
 
 ##### 4. Creating a Table...
