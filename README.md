@@ -58,12 +58,12 @@ var person = Person.Retrieve(653987);
 ##### Creating a Table...
 
 ```csharp
-ActiveRecord.CreateTable<Person>();
+Database.CreateTable<Person>();
 ```
 
 ##### Dropping a Table...
 ```csharp
-ActiveRecord.DropTable<Person>();
+Database.DropTable<Person>();
 ```
 
 
