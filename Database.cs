@@ -13,10 +13,12 @@ namespace Level
     public static IDbProviderFactory Provider { get; set; }
     
     
+    
     public static IDbConnection OpenConnection() 
     {
       
     }
+    
     
     
     public static IDbTransaction StartTransaction()
@@ -24,6 +26,25 @@ namespace Level
       
     }
     
-  }
+    
+      
+    public static IEnumerable<T> Where<T>(IQuery<T> queryToExecute)
+    {
+      
+    }
+    
+    
+    
+    public static IEnumerable<T> First<T>(IQuery<T> queryToExecute)
+    {
+      
+    }
+    
+    
+    
+    public static bool Any<T>(IQuery<T> queryToExecute)
+    {
+      
+    }
   
 }
