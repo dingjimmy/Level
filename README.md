@@ -37,27 +37,27 @@ var person = new Person()
 person.Save();
 ```
 
-##### 2: Updating a record...
+##### Updating a record...
 
 ```csharp
 person.FamilyName = "Dreamcoat";
 person.Save()
 ```
 
-##### 3: Retrieving an existing record..
+##### Retrieving an existing record..
 
 ```csharp
 var person = ActiveRecord.RetrieveFirst<Person>( p => p.Firstname == "Joeseph" && 
                                                  p.FamilyName = "Bloggs");
 ```
 
-##### 4. Creating a Table...
+##### Creating a Table...
 
 ```csharp
 ActiveRecord.CreateTable<Person>();
 ```
 
-##### 5. Dropping a Table...
+##### Dropping a Table...
 ```csharp
 ActiveRecord.DropTable<Person>();
 ```
