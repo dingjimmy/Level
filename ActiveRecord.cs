@@ -59,15 +59,6 @@ public class ActiveRecord<TKey> : IActiveRecord<TKey>
 
   }
   
-  
-  public static IEnumerable<T> Query<T>(IQuery<T> queryToExecute)
-  {
-    
-  }
-  
-  
-  public static T Retrieve<T>() { }
-  
 
   protected abstract void Create();
 
