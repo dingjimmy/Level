@@ -34,13 +34,13 @@ person.FamilyName = "Dreamcoat";
 person.Update()
 ```
 
-#### 4. Creating a Table...
+##### 4. Creating a Table...
 
 ```csharp
 ActiveRecord.CreateTable<Person>();
 ```
 
-#### 5. Dropping a Table...
+##### 5. Dropping a Table...
 ```csharp
 ActiveRecord.DropTable<Person>();
 ```
