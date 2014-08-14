@@ -13,7 +13,7 @@ namespace Level
     public static IDbProviderFactory Provider { get; set; }
     
     
-    public static IDbConnection Connect() 
+    public static IDbConnection OpenConnection() 
     {
       
     }
