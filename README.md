@@ -64,6 +64,8 @@ var people = Database.First(new SearchByNameQuery()
    });
    
 var havePeopleCalledRobert = Database.Any(new SearchByNameQuery() { FirstName == "Robert" });
+
+var noOfPeopleCalledRobert = Database.Count(new SearchByNameQuery() { FirstName == "Robert" });
 ```
 
 ##### Creating a Table...
