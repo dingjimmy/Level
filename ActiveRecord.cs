@@ -1,4 +1,4 @@
-public partial class ActiveRecord<TKey> : IActiveRecord<TKey>
+public class ActiveRecord<TKey> : IActiveRecord<TKey>
 {
   
   private TKey _Key
