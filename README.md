@@ -9,9 +9,8 @@ An ADO.Net based data persistance framework structured around the Active Record 
 ##### Implement a Model entity as an ActiveRecord
 
 ```csharp
-class Person : ActiveRecord
+class Person : ActiveRecord<int>
 {
-
    public string FirstName { get; set; }
    public string FamilyName { get; set; }
    public DateTime BornOn { get; set; }
@@ -19,7 +18,7 @@ class Person : ActiveRecord
    protected void Create() { ... }
    protected void Update() { ... }
    protected void Delete() { ... }
-   public static Person Retrieve(key) {... }
+   public static Person Retrieve(int key) {... }
    
 }
 ```
@@ -47,8 +46,13 @@ person.Save()
 ##### Retrieving an existing record..
 
 ```csharp
-var person = ActiveRecord.RetrieveFirst<Person>( p => p.Firstname == "Joeseph" && 
-                                                 p.FamilyName = "Bloggs");
+var person = Person.Retrieve(653987);
+```
+
+##### Querying the database for matching records...
+
+```csharp
+// tba
 ```
 
 ##### Creating a Table...
