@@ -68,36 +68,40 @@ public partial class ActiveRecord
       {
         case New: 
           Create();
-          break;
+          return true;
         
         case Dirty:
           Update();
-          break;
+          return true;
         
         case Rubbish:
           Delete();
-          break;
+          return true;
           
         default:
-          break;
+          return true;
       }
       
     }
     catch(CreateRecordException ex)
     {
       ...
+      return false;
     }
     catch(UpdateRecordException ex)
     {
       ...
+      return false;
     }
     catch(DeleteRecordException ex)
     {
       ...
+      return false;
     }
     catch(Exception ex)
     {
       ...
+      return false;
     }
   
   }
