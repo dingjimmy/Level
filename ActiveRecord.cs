@@ -65,12 +65,14 @@ public class ActiveRecord<TKey> : IActiveRecord<TKey>
     
   }
   
-  public static T Retrieve<T>
+  
+  public static T Retrieve<T>() { }
+  
 
-  protected abstract void Create()
+  protected abstract void Create();
 
-  protected abstract void Update()
+  protected abstract void Update();
 
-  protected abstract void Delete()
+  protected abstract void Delete();
 
 }
