@@ -18,6 +18,12 @@ namespace Level
       
     }
     
+    
+    public static IDbTransaction StartTransaction()
+    {
+      
+    }
+    
   }
   
 }
