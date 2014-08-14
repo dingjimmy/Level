@@ -1,5 +1,12 @@
-public partial class ActiveRecord : IActiveRecord
+public partial class ActiveRecord<TKey> : IActiveRecord<TKey>
 {
+  
+  private TKey _Key
+  public TKey Key
+  {
+    get { return _Key; }
+    private set { _Key = value; }
+  }
 
   public RecordState State { get; set; }
 
@@ -51,6 +58,14 @@ public partial class ActiveRecord : IActiveRecord
     }
 
   }
+  
+  
+  public static IEnumerable<T> Query<T>(IQuery<T> queryToExecute)
+  {
+    
+  }
+  
+  public static T Retrieve<T>
 
   protected abstract void Create()
 
