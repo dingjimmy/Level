@@ -40,15 +40,20 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IDataMapper.cs" />
+    <Compile Include="IDataPersistanceStore.cs" />
     <Compile Include="PersistanceStore.cs" />
-    <Compile Include="RelationalPersistance\DatabaseFactory.cs" />
-    <Compile Include="RelationalPersistance\RelationalObjectMapping.cs" />
-    <Compile Include="RelationalPersistance\RelationalPersistanceProvider.cs" />
+    <Compile Include="RelationalPersistance\IDatabaseFactory.cs" />
+    <Compile Include="RelationalPersistance\SqlServerDatabaseFactory.cs" />
+    <Compile Include="RelationalPersistance\RelationalMapper.cs" />
+    <Compile Include="RelationalPersistance\RelationalMaps.cs" />
+    <Compile Include="RelationalPersistance\RelationalPersistanceStore.cs" />
     <Compile Include="IActiveRecord.cs" />
-    <Compile Include="IDataPersistanceProvidor.cs" />
     <Compile Include="RecordState.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="_ClassDiagram.cd" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>
     <VisualStudio AllowExistingFolder="true" />

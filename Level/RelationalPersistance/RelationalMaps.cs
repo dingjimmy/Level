@@ -26,7 +26,7 @@ namespace Level.RelationalPersistance
         /// <summary>
         /// A collection of Property->Column maps.
         /// </summary>
-        public List<ColumnMap> ColumnMaps { get; set; }
+        public ICollection<ColumnMap> ColumnMaps { get; set; }
 
 
         /// <summary>
@@ -51,16 +51,32 @@ namespace Level.RelationalPersistance
         /// </summary>
         public bool IsPrimaryKey { get; set; }
 
+
         /// <summary>
-        /// The name of the database table column.
+        /// The name of the column to map.
         /// </summary>
-        public string Column { get; set; }
+        public string ColumnName { get; set; }
+
+
+        public System.Data.DbType ColumnType { get; set; }
 
 
         /// <summary>
-        /// The name of the CLR object property.
+        /// The size of the column to map.
         /// </summary>
-        public string Property { get; set; }
+        public int ColumnSize { get; set; }
+
+
+        /// <summary>
+        /// The name of the clr property to map
+        /// </summary>
+        public string PropertyName { get; set; }
+
+
+        /// <summary>
+        /// The type of the clr property to map.
+        /// </summary>
+        public Type PropertyType { get; set; }
 
     }
 }
