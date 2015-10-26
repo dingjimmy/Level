@@ -79,13 +79,15 @@ namespace Level.RelationalPersistance
                 if (p.CanRead && p.CanWrite)
                 {
                     var colMap = new ColumnMap();
+
                     colMap.ColumnName = p.Name;
+                    colMap.IsPrimaryKey = p.Name.ToUpper() == "ID";
                     colMap.ColumnType = AdoDataType(p.PropertyType);
                     colMap.ColumnSize = AdoDataSize(p.PropertyType);
                     colMap.PropertyName = p.Name;
                     colMap.PropertyType = p.PropertyType;
-                    colMap.AllowNull = p.PropertyType.IsAssignableFrom(typeof(Nullable));
-                    colMap.IsPrimaryKey = p.Name.ToUpper() == "ID";
+                    colMap.AllowNull = !p.PropertyType.IsValueType && !colMap.IsPrimaryKey; // || p.PropertyType.IsAssignableFrom(typeof(Nullable));
+                    
                     maps.Add(colMap);
                 }
             }
@@ -96,7 +98,7 @@ namespace Level.RelationalPersistance
 
 
         /// <summary>
-        /// Maps fundamental CLR types to ADO.NET database column types.
+        /// Maps primitive CLR types to ADO.NET database column types.
         /// </summary>
         private DbType AdoDataType(Type t)
         {
@@ -144,17 +146,14 @@ namespace Level.RelationalPersistance
 
 
         /// <summary>
-        /// Gets the appropriate ADO.NET column size for the given CLR type.
+        /// Gets the appropriate ADO.NET column size for the given CLR type. A null value indicates 
+        /// that the persistance store's default size for the given type should be used.
         /// </summary>
         private int? AdoDataSize(Type t)
         {
             if (t == typeof(Char))
             {
                 return 1;
-            }
-            else if (t == typeof(String))
-            {
-                return int.MaxValue;
             }
             else
             {

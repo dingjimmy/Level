@@ -61,7 +61,7 @@ namespace Level.RelationalPersistance
             foreach (var col in map.ColumnMaps)
             {
                 lineCount++;
-                sb.Append($"  [{col.ColumnName}] {SqlServerDataType(col.ColumnType, col.ColumnSize)}");
+                sb.Append($"  [{col.ColumnName}] {SqlServerDataType(col.ColumnType, col.ColumnSize)} {Nullable(col)} {PrimaryKey(col)}");
 
                 if (lineCount != map.ColumnMaps.Count)
                     sb.AppendLine(",");
@@ -101,11 +101,29 @@ namespace Level.RelationalPersistance
                     cmd.ExecuteNonQuery();
                     return true;
                 }
-                catch
+                catch (Exception ex)
                 {
                     return false;
                 }
             }
+        }
+
+
+        private string PrimaryKey(ColumnMap map)
+        {
+            if (map.IsPrimaryKey)
+                return "PRIMARY KEY";
+            else
+                return string.Empty;
+        }
+
+
+        private string Nullable(ColumnMap map)
+        {
+            if (map.AllowNull)
+                return "NULL";
+            else
+                return "NOT NULL";
         }
 
 
@@ -117,10 +135,12 @@ namespace Level.RelationalPersistance
             switch (adoDataType)
             {
                 case DbType.AnsiString:
-                    return $"VARCHAR({size.Value})";
+                    var vsz = size.HasValue == true ? size.Value.ToString() : "MAX";
+                    return $"VARCHAR({vsz})";
 
                 case DbType.Binary:
-                    return $"BINARY({size.Value})";
+                    var vbsz = size.HasValue == true ? size.Value.ToString() : "MAX";
+                    return $"VARBINARY({vbsz})";
 
                 case DbType.Byte:
                     return "TINYINT";
@@ -165,7 +185,8 @@ namespace Level.RelationalPersistance
                     return "REAL";
 
                 case DbType.String:
-                    return $"NVARCHAR({size.Value})";
+                    var nvsz = size.HasValue == true ? size.Value.ToString() : "MAX";
+                    return $"NVARCHAR({nvsz})";
 
                 case DbType.Time:
                     return "TIME";
@@ -183,10 +204,12 @@ namespace Level.RelationalPersistance
                     throw new NotSupportedException(nameof(DbType.VarNumeric));
 
                 case DbType.AnsiStringFixedLength:
-                    return $"CHAR({size.Value})"; ;
+                    var csz = size.HasValue == true ? size.Value.ToString() : "1";
+                    return $"CHAR({csz})"; ;
 
                 case DbType.StringFixedLength:
-                    return $"NCHAR({size.Value})";
+                    var vcsz = size.HasValue == true ? size.Value.ToString() : "1";
+                    return $"NCHAR({vcsz})";
 
                 case DbType.Xml:
                     return "XML";

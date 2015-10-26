@@ -69,7 +69,7 @@ namespace Level.RelationalPersistance
 
 
         /// <summary>
-        /// The size of the column to map.
+        /// The size of the column to map. A null value means use the default size for the column type.
         /// </summary>
         public int? ColumnSize { get; set; }
 
