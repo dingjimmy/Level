@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -53,18 +54,24 @@ namespace Level.RelationalPersistance
 
 
         /// <summary>
+        /// Specifies if this column map must support null values.
+        /// </summary>
+        public bool AllowNull { get; set; }
+
+
+        /// <summary>
         /// The name of the column to map.
         /// </summary>
         public string ColumnName { get; set; }
 
 
-        public System.Data.DbType ColumnType { get; set; }
+        public DbType ColumnType { get; set; }
 
 
         /// <summary>
         /// The size of the column to map.
         /// </summary>
-        public int ColumnSize { get; set; }
+        public int? ColumnSize { get; set; }
 
 
         /// <summary>

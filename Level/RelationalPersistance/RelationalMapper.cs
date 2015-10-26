@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -83,6 +84,7 @@ namespace Level.RelationalPersistance
                     colMap.ColumnSize = AdoDataSize(p.PropertyType);
                     colMap.PropertyName = p.Name;
                     colMap.PropertyType = p.PropertyType;
+                    colMap.AllowNull = p.PropertyType.IsAssignableFrom(typeof(Nullable));
                     colMap.IsPrimaryKey = p.Name.ToUpper() == "ID";
                     maps.Add(colMap);
                 }
@@ -90,6 +92,74 @@ namespace Level.RelationalPersistance
 
             return maps;
 
+        }
+
+
+        /// <summary>
+        /// Maps fundamental CLR types to ADO.NET database column types.
+        /// </summary>
+        private DbType AdoDataType(Type t)
+        {
+            if (t == typeof(Char))
+            {
+                return DbType.StringFixedLength;
+            }
+            else if (t == typeof(String))
+            {
+                return DbType.String;
+            }
+            else if(t == typeof(Boolean))
+            {
+                return DbType.Boolean;
+            }
+            else if (t == typeof(Byte))
+            {
+                return DbType.Byte;
+            }
+            else if( t== typeof(Int16))
+            {
+                return DbType.Int16;
+            }
+            else if (t== typeof(Int32))
+            {
+                return DbType.Int32;
+            }
+            else if (t== typeof(Int64))
+            {
+                return DbType.Int64;
+            }
+            else if (t == typeof(Single))
+            {
+                return DbType.Single;
+            }
+            else if (t == typeof(Double))
+            {
+                return DbType.Double;
+            }
+            else
+            {
+                throw new NotSupportedException(t.FullName);
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the appropriate ADO.NET column size for the given CLR type.
+        /// </summary>
+        private int? AdoDataSize(Type t)
+        {
+            if (t == typeof(Char))
+            {
+                return 1;
+            }
+            else if (t == typeof(String))
+            {
+                return int.MaxValue;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
