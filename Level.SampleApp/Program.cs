@@ -8,27 +8,60 @@ namespace Level.SampleApp
         static void Main(string[] args)
         {
             var connStr = @"server=(localdb)\mssqllocaldb;database=level-test";
-            var factory = new SqlServerDatabaseFactory();
-            var store = new RelationalPersistanceStore(factory, connStr);
+            var mapper = new RelationalMapper();
+            var provider = new SqlServerPersistanceProvider(connStr, mapper);
 
 
-            store.DataMapper.Map<Foo>();
-            store.DataMapper.Map<Bar>();
+            mapper.Map<Foo>();
+            mapper.Map<Bar>();
 
-            var fooMap = store.DataMapper[typeof(Foo)];
-            var barMap = store.DataMapper[typeof(Bar)];
+            var fooMap = mapper[typeof(Foo)];
+            var barMap = mapper[typeof(Bar)];
 
             WriteMap(fooMap);
-            Console.WriteLine();
             WriteMap(barMap);
 
             Console.Read();
 
-            if (factory.CreateTable(fooMap, connStr))
-                Console.WriteLine("Foo table created...");
+            if (!provider.TableExists<Foo>())
+            {
+                Console.WriteLine("Foo table already exists.");
+                Console.Write("Deleting Foo table...");
 
-            if(factory.CreateTable(barMap, connStr))
+                provider.DropTable<Foo>();
+
+                Console.WriteLine("done.");
+            }
+
+
+            try
+            {
+                provider.CreateTable<Foo>();
+                Console.WriteLine("Foo table created...");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Foo table creation failed... {ex.Message}");
+            }
+
+
+            try
+            {
+                provider.CreateTable<Bar>();
                 Console.WriteLine("Bar table created...");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Bar table creation failed... {ex.Message}");
+            }
+
+
+
+            provider.Insert(new Foo() { ID = 1001, Name = "Mr Foo", Age = 234, IsHuman = true, Location = 192.456f });
+            provider.Insert(new Foo() { ID = 1001, Name = "Mr Weener", Age = 24, IsHuman = false, Location = 987.009208f });
+
+
+            
 
         }
 
@@ -55,6 +88,7 @@ namespace Level.SampleApp
                 if (col.IsPrimaryKey)
                     Console.Write("primary key, ");
 
+                Console.WriteLine();
                 Console.WriteLine();
             }
         }

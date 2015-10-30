@@ -7,15 +7,12 @@
       <FileName>IDataMapper.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Level.IDataPersistanceStore&lt;T&gt;">
-    <Position X="8" Y="1.5" Width="2.25" />
+  <Interface Name="Level.IDataPersistanceProvider">
+    <Position X="7.5" Y="1.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AIQAAAAAAAAAAAAAAAAAgAAAAAEAAEAAAAAAAAAAAAA=</HashCode>
-      <FileName>IDataPersistanceStore.cs</FileName>
+      <HashCode>AIQAAEAAAAAAAAABBAAAAAQAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IDataPersistanceProvider.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="DataMapper" />
-    </ShowAsAssociation>
   </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

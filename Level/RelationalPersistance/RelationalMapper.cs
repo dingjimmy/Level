@@ -15,7 +15,7 @@ namespace Level.RelationalPersistance
 
 
         /// <summary>
-        /// 
+        /// Gets the map for the specified type. 
         /// </summary>
         public TableMap this[Type objectType]
         {

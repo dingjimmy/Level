@@ -41,13 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IDataMapper.cs" />
-    <Compile Include="IDataPersistanceStore.cs" />
-    <Compile Include="PersistanceStore.cs" />
-    <Compile Include="RelationalPersistance\IDatabaseFactory.cs" />
-    <Compile Include="RelationalPersistance\SqlServerDatabaseFactory.cs" />
+    <Compile Include="IDataPersistanceProvider.cs" />
     <Compile Include="RelationalPersistance\RelationalMapper.cs" />
     <Compile Include="RelationalPersistance\RelationalMaps.cs" />
-    <Compile Include="RelationalPersistance\RelationalPersistanceStore.cs" />
+    <Compile Include="RelationalPersistance\SqlServerPersistanceProvider.cs" />
     <Compile Include="IActiveRecord.cs" />
     <Compile Include="RecordState.cs" />
   </ItemGroup>

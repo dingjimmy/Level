@@ -1,56 +1,68 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Text;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace Level.RelationalPersistance
 {
-
     /// <summary>
-    /// 
+    /// Provides the ability to persist and retrieve objects from a relational database.
     /// </summary>
-    public class SqlServerDatabaseFactory : IDatabaseFactory
+    public class SqlServerPersistanceProvider : IDataPersistanceProvider
     {
 
         readonly DbProviderFactory _internalFactory;
+        readonly IDataMapper<TableMap> _dataMapper;
+        readonly string _connString;
 
 
         /// <summary>
-        /// Creates a new instance of <see cref="SqlServerDatabaseFactory"/>.
+        /// Creates a new instance of <see cref="SqlServerPersitanceProvider"/>.
         /// </summary>
-        /// <param name="providerFactory"></param>
-        public SqlServerDatabaseFactory()
+        public SqlServerPersistanceProvider(string connectionString, IDataMapper<TableMap> dataMapper)
         {
+
+            if (String.IsNullOrWhiteSpace(connectionString)) throw new ArgumentNullException(nameof(connectionString));
+            if (dataMapper == null) throw new ArgumentNullException(nameof(dataMapper));
+
             _internalFactory = SqlClientFactory.Instance;
+            _dataMapper = dataMapper;
+            _connString = connectionString;
+
         }
 
 
         /// <summary>
-        /// Creates a new ADO.NET database connection using the provided connection string.
+        /// Checks if a table already exists for <see cref="{TObject}"/>.
         /// </summary>
-        public IDbConnection CreateDbConnection(string connectionString)
+        public bool TableExists<TObject>()
         {
-            var conn = _internalFactory.CreateConnection();
-            conn.ConnectionString = connectionString;
-            return conn;
+            var map = _dataMapper[typeof(TObject)];
+
+            try
+            {
+                ExecuteCommand($"SELECT 1 FROM[{ map.Table}] WHERE 1 = 0");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new DataException($"Unable to confirm if table [{map.Table}] exists. See inner exception for more detail.", ex);
+            }
+            
         }
 
 
         /// <summary>
-        /// Checks if a table already exists for the given table mapping.
+        /// Creates a table for the <see cref="{TObject}"/> class.
         /// </summary>
-        public bool TableExists(TableMap map, string connectionString)
-        {
-            return ExecuteCommand($"SELECT 1 FROM[{ map.Table}] WHERE 1 = 0", connectionString);
-        }
+        public void CreateTable<TObject>()
+        { 
+            
+            // get map
+            var map = _dataMapper[typeof(TObject)];
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool CreateTable(TableMap map, string connectionString)
-        {
 
             // build sql command
             var sb = new StringBuilder($"CREATE TABLE [{ map.Table }] ");
@@ -73,23 +85,78 @@ namespace Level.RelationalPersistance
 
 
             // execute sql command
-            return ExecuteCommand(sb.ToString(), connectionString);
-
+            try
+            {
+                ExecuteCommand(sb.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw new DataException($"Unable to create table [{map.Table}].", ex);
+            }
+            
         }
 
-        
+
         /// <summary>
-        /// 
+        /// Drops the table for <see cref="{TObject}"/>, if it exists.
         /// </summary>
-        public void DropTable(TableMap map, string connectionString)
+        public void DropTable<TObject>()
         {
+
+            // get the map
+            var map = _dataMapper[typeof(TObject)];
+
+            // drop the table
+            try
+            {
+                ExecuteCommand($"DROP TABLE [{map.Table}]");
+            }
+            catch (Exception ex)
+            {
+                throw new DataException($"Unable to drop table [{map.Table}].", ex);
+            }
 
         }
 
 
-        private bool ExecuteCommand(string sqlStr, string conStr)
+
+        public TObject Insert<TObject>(TObject data)
         {
-            using (var conn = CreateDbConnection(conStr))
+            throw new NotImplementedException();
+        }
+
+        public TObject Retrieve<TObject, TKey>(TKey key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TObject Update<TObject>(TObject data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete<TObject, TKey>(TKey key)
+        {
+            throw new NotImplementedException();
+        }
+
+
+#region Privates
+
+
+        // Creates a new ADO.NET database connection.
+        private IDbConnection CreateDbConnection()
+        {
+            var conn = _internalFactory.CreateConnection();
+            conn.ConnectionString = _connString;
+            return conn;
+        }
+
+
+        // Executes the given sql command.
+        private void ExecuteCommand(string sqlCmd)
+        {
+            using (var conn = CreateDbConnection())
             {
                 try
                 {
@@ -97,18 +164,41 @@ namespace Level.RelationalPersistance
 
                     var cmd = conn.CreateCommand();
                     cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = sqlStr;
+                    cmd.CommandText = sqlCmd;
                     cmd.ExecuteNonQuery();
-                    return true;
                 }
                 catch (Exception ex)
                 {
-                    return false;
+                    throw new DataException($"Failed to execute sql command \"{sqlCmd}\". See inner exception for further details.", ex);
                 }
             }
         }
 
 
+        // Executes the given sql query and returns results as datareader.
+        private IDataReader ExecuteQuery(string sqlQuery, IEnumerable<IDataParameter> parameters)
+        {
+            using (var conn = CreateDbConnection())
+            {
+                try
+                {
+                    conn.Open();
+
+                    var cmd = conn.CreateCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = sqlQuery;
+
+                    return cmd.ExecuteReader();
+                }
+                catch (Exception ex)
+                {
+                    throw new DataException($"Failed to execute sql query \"{sqlQuery}\". See inner exception for further details.", ex);
+                }
+            }
+        }
+
+
+        //
         private string PrimaryKey(ColumnMap map)
         {
             if (map.IsPrimaryKey)
@@ -118,6 +208,7 @@ namespace Level.RelationalPersistance
         }
 
 
+        //
         private string Nullable(ColumnMap map)
         {
             if (map.AllowNull)
@@ -127,9 +218,7 @@ namespace Level.RelationalPersistance
         }
 
 
-        /// <summary>
-        /// Maps Ado.net column data types to sqlserver column data types.
-        /// </summary>
+        // Maps Ado.net column data types to sqlserver column data types.
         private string SqlServerDataType(DbType adoDataType, int? size)
         {
             switch (adoDataType)
@@ -224,6 +313,10 @@ namespace Level.RelationalPersistance
                     throw new NotSupportedException("INVALID DATA TYPE");
             }
         }
+
+
+#endregion
+
 
     }
 }
